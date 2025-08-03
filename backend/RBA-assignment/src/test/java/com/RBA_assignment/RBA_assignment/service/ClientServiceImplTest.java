@@ -1,6 +1,5 @@
 package com.RBA_assignment.RBA_assignment.service;
 
-import com.RBA_assignment.RBA_assignment.dto.CardStatusMessage;
 import com.RBA_assignment.RBA_assignment.dto.ClientDTO;
 import com.RBA_assignment.RBA_assignment.model.Client;
 import com.RBA_assignment.RBA_assignment.model.Status;
@@ -59,11 +58,6 @@ class ClientServiceImplTest {
         Client clientEntity = createClient(firstName, lastName, oib, APPROVED);
 
         when(clientRepository.findByOib(oib)).thenReturn(java.util.Optional.of(clientEntity));
-        when(restTemplate.postForObject(
-                anyString(),
-                any(ClientDTO.class),
-                eq(CardStatusMessage.class)
-        )).thenReturn(null);
 
         ClientDTO result = clientService.getClientByOib(oib);
 
@@ -73,11 +67,7 @@ class ClientServiceImplTest {
         assertThat(result.getLastName()).isEqualTo(lastName);
         assertThat(result.getStatus()).isEqualTo(APPROVED);
 
-        verify(restTemplate).postForObject(
-                eq("http://localhost:8080/api/v1/card-request"),
-                any(ClientDTO.class),
-                eq(CardStatusMessage.class)
-        );
+        verify(cardRequestService).requestCardForClient(any(ClientDTO.class));
     }
 
     @Test
