@@ -61,7 +61,6 @@ public class CardController {
             ) String cardNumber
     ) {
         log.info("Deleting client with card number: {}", cardNumber);
-        //cardService.deleteCard(cardNumber);
         return ResponseEntity.ok(cardService.deleteCard(cardNumber));
     }
 }
