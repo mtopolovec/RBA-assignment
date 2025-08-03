@@ -12,7 +12,7 @@ public class ClientMapper {
                 client.getFirstName(),
                 client.getLastName(),
                 client.getOib(),
-                client.getStatus()
+                client.getStatus().toString()
         );
     }
 

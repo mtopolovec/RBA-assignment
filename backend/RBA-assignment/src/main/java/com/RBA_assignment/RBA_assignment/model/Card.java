@@ -11,18 +11,17 @@ import lombok.NoArgsConstructor;
 @Entity
 @Data
 @Builder
-public class Client {
+public class Card {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String firstName;
-
-    private String lastName;
-
-    @Column(unique = true, nullable = false, length = 11)
-    private String oib;
+    @Column(unique = true, nullable = false)
+    private String cardNumber;
 
     @Enumerated(EnumType.STRING)
     private Status status;
+
+    @Column(unique = true, nullable = false, length = 11)
+    private String oib;
 }

@@ -1,5 +1,6 @@
 package com.RBA_assignment.RBA_assignment.service;
 
+import com.RBA_assignment.RBA_assignment.dto.CardStatusMessage;
 import com.RBA_assignment.RBA_assignment.dto.ClientDTO;
 import com.RBA_assignment.RBA_assignment.model.Client;
 import com.RBA_assignment.RBA_assignment.model.Status;
@@ -7,6 +8,7 @@ import com.RBA_assignment.RBA_assignment.repository.ClientRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
+import org.springframework.web.client.RestTemplate;
 
 import static com.RBA_assignment.RBA_assignment.model.Status.APPROVED;
 import static com.RBA_assignment.RBA_assignment.model.Status.PENDING;
@@ -18,13 +20,15 @@ class ClientServiceImplTest {
 
     private ClientRepository clientRepository;
     private ClientServiceImpl clientService;
+    private RestTemplate restTemplate;
 
     private final String oib = "85251569017";
 
     @BeforeEach
     void setUp() {
         clientRepository = mock(ClientRepository.class);
-        clientService = new ClientServiceImpl(clientRepository);
+        restTemplate = mock(RestTemplate.class);
+        clientService = new ClientServiceImpl(clientRepository, restTemplate);
     }
 
     @Test
@@ -49,13 +53,18 @@ class ClientServiceImplTest {
     }
 
     @Test
-    void getClientByOib_shouldReturnClientDTO() {
+    void getClientByOib_shouldReturnClientDTOAndCreateNewCardRequest() {
         String firstName = "Jane";
         String lastName = "Smith";
 
         Client clientEntity = createClient(firstName, lastName, oib, APPROVED);
 
         when(clientRepository.findByOib(oib)).thenReturn(java.util.Optional.of(clientEntity));
+        when(restTemplate.postForObject(
+                anyString(),
+                any(ClientDTO.class),
+                eq(CardStatusMessage.class)
+        )).thenReturn(null);
 
         ClientDTO result = clientService.getClientByOib(oib);
 
@@ -64,6 +73,12 @@ class ClientServiceImplTest {
         assertThat(result.getFirstName()).isEqualTo(firstName);
         assertThat(result.getLastName()).isEqualTo(lastName);
         assertThat(result.getStatus()).isEqualTo(APPROVED);
+
+        verify(restTemplate).postForObject(
+                eq("http://localhost:8080/api/v1/card-request"),
+                any(ClientDTO.class),
+                eq(CardStatusMessage.class)
+        );
     }
 
     @Test
@@ -137,7 +152,7 @@ class ClientServiceImplTest {
     }
 
     private ClientDTO createClientDTO(String firstName, String lastName, String oib, Status status) {
-        return new ClientDTO(firstName, lastName, oib, status);
+        return new ClientDTO(firstName, lastName, oib, status.toString());
     }
 
     private Client createClient(String firstName, String lastName, String oib, Status status) {

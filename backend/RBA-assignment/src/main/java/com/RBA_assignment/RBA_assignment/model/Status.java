@@ -6,9 +6,12 @@ import lombok.Getter;
 
 @Getter
 public enum Status {
+    INACTIVE("Inactive"),
+    ACTIVE("Active"),
     PENDING("Pending"),
     APPROVED("Approved"),
-    REJECTED("Rejected");
+    REJECTED("Rejected"),
+    BLOCKED("Active");
 
     private final String status;
 

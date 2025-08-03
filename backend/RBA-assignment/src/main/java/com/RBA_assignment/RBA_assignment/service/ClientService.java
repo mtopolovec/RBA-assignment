@@ -10,4 +10,5 @@ public interface ClientService {
     List<ClientDTO> getAllClients();
     ClientDTO updateClient(ClientDTO clientDTO);
     ClientDTO deleteClient(String oib);
+    void eventChangeClientStatus(String oib, String status);
 }
