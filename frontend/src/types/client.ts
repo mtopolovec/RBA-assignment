@@ -1,13 +1,4 @@
-export const Status = {
-  INACTIVE: 'INACTIVE',
-  ACTIVE: 'ACTIVE',
-  PENDING: 'PENDING',
-  APPROVED: 'APPROVED',
-  REJECTED: 'REJECTED',
-  BLOCKED: 'BLOCKED',
-} as const;
-
-export type Status = (typeof Status)[keyof typeof Status];
+import type { Status } from './card';
 
 export interface Client {
   firstName: string;

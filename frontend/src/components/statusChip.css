@@ -1,0 +1,280 @@
+/* Base status chip styling */
+.status-chip {
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 1px !important;
+  border-radius: 16px !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
+  transition: all 0.3s ease !important;
+  border: none !important;
+}
+
+.status-chip:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* Status-specific colors */
+.status-chip.status-active {
+  background: linear-gradient(135deg, #4caf50, #388e3c) !important;
+  color: white !important;
+}
+
+.status-chip.status-approved {
+  background: linear-gradient(135deg, #2e7d32, #1b5e20) !important;
+  color: white !important;
+}
+
+.status-chip.status-pending {
+  background: linear-gradient(135deg, #ffd700, #ffa500) !important;
+  color: #1a1a1a !important;
+}
+
+.status-chip.status-blocked {
+  background: linear-gradient(135deg, #f44336, #d32f2f) !important;
+  color: white !important;
+}
+
+.status-chip.status-rejected {
+  background: linear-gradient(135deg, #c62828, #b71c1c) !important;
+  color: white !important;
+}
+
+.status-chip.status-inactive {
+  background: linear-gradient(135deg, #9e9e9e, #757575) !important;
+  color: white !important;
+}
+
+/* Variant-specific styling */
+.status-chip.variant-dashboard {
+  font-size: 0.75rem !important;
+  height: 28px !important;
+  padding: 0 12px !important;
+}
+
+.status-chip.variant-card {
+  font-size: 1rem !important;
+  height: 36px !important;
+  padding: 0 16px !important;
+}
+
+/* Size variations */
+.status-chip.MuiChip-sizeSmall {
+  font-size: 0.7rem !important;
+  height: 24px !important;
+  padding: 0 8px !important;
+}
+
+.status-chip.MuiChip-sizeMedium {
+  font-size: 0.875rem !important;
+  height: 32px !important;
+  padding: 0 12px !important;
+}
+
+.status-chip.MuiChip-sizeLarge {
+  font-size: 1rem !important;
+  height: 40px !important;
+  padding: 0 20px !important;
+}
+
+/* Status indicator dots */
+.status-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 8px;
+  position: relative;
+  animation: pulse 2s infinite;
+}
+
+.status-dot::after {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  border-radius: 50%;
+  opacity: 0.3;
+  animation: pulse-ring 2s infinite;
+}
+
+/* Status dot colors */
+.status-dot.status-active,
+.status-dot.status-approved {
+  background: #4caf50;
+  box-shadow: 0 0 6px rgba(76, 175, 80, 0.6);
+}
+
+.status-dot.status-active::after,
+.status-dot.status-approved::after {
+  background: rgba(76, 175, 80, 0.3);
+}
+
+.status-dot.status-pending {
+  background: #ffd700;
+  box-shadow: 0 0 6px rgba(255, 215, 0, 0.6);
+}
+
+.status-dot.status-pending::after {
+  background: rgba(255, 215, 0, 0.3);
+}
+
+.status-dot.status-blocked,
+.status-dot.status-rejected {
+  background: #f44336;
+  box-shadow: 0 0 6px rgba(244, 67, 54, 0.6);
+}
+
+.status-dot.status-blocked::after,
+.status-dot.status-rejected::after {
+  background: rgba(244, 67, 54, 0.3);
+}
+
+.status-dot.status-inactive {
+  background: #9e9e9e;
+  box-shadow: 0 0 6px rgba(158, 158, 158, 0.6);
+}
+
+.status-dot.status-inactive::after {
+  background: rgba(158, 158, 158, 0.3);
+}
+
+/* Hover effects with status-specific glows */
+.status-chip.status-active:hover {
+  box-shadow: 0 4px 16px rgba(76, 175, 80, 0.4) !important;
+}
+
+.status-chip.status-approved:hover {
+  box-shadow: 0 4px 16px rgba(46, 125, 50, 0.4) !important;
+}
+
+.status-chip.status-pending:hover {
+  box-shadow: 0 4px 16px rgba(255, 215, 0, 0.4) !important;
+}
+
+.status-chip.status-blocked:hover {
+  box-shadow: 0 4px 16px rgba(244, 67, 54, 0.4) !important;
+}
+
+.status-chip.status-rejected:hover {
+  box-shadow: 0 4px 16px rgba(198, 40, 40, 0.4) !important;
+}
+
+.status-chip.status-inactive:hover {
+  box-shadow: 0 4px 16px rgba(158, 158, 158, 0.4) !important;
+}
+
+/* Pulse animations */
+@keyframes pulse {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.05);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes pulse-ring {
+  0% {
+    opacity: 0.8;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.4;
+    transform: scale(1.3);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.6);
+  }
+}
+
+/* Special effects for critical statuses */
+.status-chip.status-blocked,
+.status-chip.status-rejected {
+  animation: subtle-flash 3s infinite;
+}
+
+@keyframes subtle-flash {
+  0%,
+  90%,
+  100% {
+    opacity: 1;
+  }
+  95% {
+    opacity: 0.8;
+  }
+}
+
+/* Active status gets a subtle glow */
+.status-chip.status-active {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15), 0 0 20px rgba(76, 175, 80, 0.2) !important;
+}
+
+/* Pending status gets a gentle pulse */
+.status-chip.status-pending {
+  animation: gentle-pulse 2s infinite;
+}
+
+@keyframes gentle-pulse {
+  0%,
+  100% {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15), 0 0 15px rgba(255, 215, 0, 0.3);
+  }
+  50% {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15), 0 0 25px rgba(255, 215, 0, 0.5);
+  }
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .status-chip.variant-dashboard {
+    font-size: 0.7rem !important;
+    height: 24px !important;
+    padding: 0 8px !important;
+  }
+
+  .status-chip.variant-card {
+    font-size: 0.875rem !important;
+    height: 32px !important;
+    padding: 0 12px !important;
+  }
+
+  .status-dot {
+    width: 10px;
+    height: 10px;
+    margin-right: 6px;
+  }
+}
+
+/* Focus states for accessibility */
+.status-chip:focus {
+  outline: 2px solid #2196f3;
+  outline-offset: 2px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .status-chip {
+    border: 2px solid currentColor !important;
+  }
+}
+
+/* Reduced motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .status-chip,
+  .status-dot,
+  .status-chip::after,
+  .status-dot::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}

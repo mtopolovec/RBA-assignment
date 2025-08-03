@@ -13,7 +13,6 @@ import {
   Alert,
   Button,
   IconButton,
-  Chip,
 } from '@mui/material';
 import {
   Add as AddIcon,
@@ -21,6 +20,7 @@ import {
   Delete as DeleteIcon,
 } from '@mui/icons-material';
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // Using React Router v6+
 
 import {
   type Client,
@@ -28,16 +28,14 @@ import {
   type UpdateClientRequest,
 } from '../types/client';
 import { API_CONFIG } from '../constants/api';
-import {
-  getStatusColor,
-  sortClientsByLastName,
-  formatOIB,
-} from '../utils/clientUtils';
+import { sortClientsByLastName, formatOIB } from '../utils/clientUtils';
 import CreateClientModal from './CreateClientModal';
 import UpdateClientModal from './UpdateClientModal';
 import './dashboard.css';
+import StatusChip from './StatusChip';
 
 const Dashboard = () => {
+  const navigate = useNavigate();
   const [clients, setClients] = useState<Client[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -165,6 +163,11 @@ const Dashboard = () => {
     }
   };
 
+  // Navigate to client cards using CARDS_BY_OIB endpoint
+  const handleClientClick = (oib: string) => {
+    navigate(`/client/${oib}/cards`);
+  };
+
   useEffect(() => {
     fetchClients();
   }, []);
@@ -225,20 +228,36 @@ const Dashboard = () => {
             </TableHead>
             <TableBody>
               {clients.map((client, index) => (
-                <TableRow key={client.oib}>
+                <TableRow
+                  key={client.oib}
+                  hover
+                  sx={{
+                    cursor: 'pointer',
+                    '&:hover': {
+                      backgroundColor: 'action.hover',
+                    },
+                  }}
+                  onClick={() => handleClientClick(client.oib)} // Make entire row clickable
+                >
                   <TableCell>{index + 1}</TableCell>
                   <TableCell>{client.firstName}</TableCell>
                   <TableCell>{client.lastName}</TableCell>
                   <TableCell>{formatOIB(client.oib)}</TableCell>
                   <TableCell>
-                    <Chip
-                      label={client.status}
-                      color={getStatusColor(client.status)}
+                    <StatusChip
+                      status={client.status}
                       size="small"
+                      showDot={true}
+                      variant="dashboard"
                     />
                   </TableCell>
                   <TableCell align="center">
-                    <Box display="flex" gap={1} justifyContent="center">
+                    <Box
+                      display="flex"
+                      gap={1}
+                      justifyContent="center"
+                      onClick={(e) => e.stopPropagation()} // Prevent row click when clicking actions
+                    >
                       <IconButton
                         color="primary"
                         size="small"
@@ -262,6 +281,11 @@ const Dashboard = () => {
             </TableBody>
           </Table>
         </TableContainer>
+
+        {/* Add helpful text */}
+        <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
+          💡 Click on any client row to view their cards
+        </Typography>
 
         {clients.length === 0 && (
           <Box mt={3} textAlign="center">

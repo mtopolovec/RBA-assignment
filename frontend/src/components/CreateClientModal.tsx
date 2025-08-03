@@ -13,8 +13,9 @@ import {
   Alert,
 } from '@mui/material';
 import { useState } from 'react';
-import { type CreateClientRequest, Status } from '../types/client';
+import { type CreateClientRequest } from '../types/client';
 import { isValidOIB } from '../utils/clientUtils';
+import { Status } from '../types/card';
 
 interface CreateClientModalProps {
   open: boolean;

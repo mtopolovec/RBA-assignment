@@ -9,6 +9,7 @@ public interface CardService {
     void createCardNewRequest(ClientDTO newCardRequest);
     CardDTO createCard(CardDTO cardDTO);
     CardDTO getCardByCardNumber(String cardNumber);
+    CardDTO getCardByOib(String oib);
     List<CardDTO> getAllCards();
     CardDTO updateCard(CardDTO cardDTO);
     CardDTO deleteCard(String cardNumber);

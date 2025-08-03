@@ -63,6 +63,16 @@ public class CardServiceImpl implements CardService {
     }
 
     @Override
+    public CardDTO getCardByOib(String oib) {
+        log.info("Fetching card with OIB: {}", oib);
+        return CardMapper.cardToDto(cardRepository.findByOib(oib)
+                .orElseThrow(() -> {
+                    log.error("Card not found for OIB: {}", oib);
+                    return new FetchNotFoundException("Card not found for OIB: " + oib, oib);
+                }));
+    }
+
+    @Override
     public List<CardDTO> getAllCards() {
         log.info("Fetching all cards");
         return cardRepository.findAll().stream().map(CardMapper::cardToDto).toList();

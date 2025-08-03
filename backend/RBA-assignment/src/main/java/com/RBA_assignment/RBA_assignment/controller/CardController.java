@@ -2,6 +2,7 @@ package com.RBA_assignment.RBA_assignment.controller;
 
 import com.RBA_assignment.RBA_assignment.dto.CardDTO;
 import com.RBA_assignment.RBA_assignment.service.CardService;
+import com.RBA_assignment.RBA_assignment.validator.ValidOIB;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
 import lombok.RequiredArgsConstructor;
@@ -36,6 +37,13 @@ public class CardController {
     ) {
         log.info("Fetching cards by card number: {}", cardNumber);
         CardDTO card = cardService.getCardByCardNumber(cardNumber);
+        return ResponseEntity.ok(card);
+    }
+
+    @GetMapping("/client/{oib}")
+    public ResponseEntity<CardDTO> getCardByOib(@PathVariable @ValidOIB String oib) {
+        log.info("Fetching cards by card number: {}", oib);
+        CardDTO card = cardService.getCardByOib(oib);
         return ResponseEntity.ok(card);
     }
 

@@ -4,6 +4,7 @@ export const API_CONFIG = {
     CLIENTS: '/api/v1/clients',
     CLIENT_BY_OIB: (oib: string) => `/api/v1/clients/${oib}`,
     CARDS: '/api/v1/cards',
+    CARDS_BY_OIB: (oib: string) => `/api/v1/cards/client/${oib}`,
     CHANGE_STATUS: '/api/v1/card-status',
   },
   HEADERS: {
