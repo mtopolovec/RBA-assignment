@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.FetchNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
@@ -35,11 +36,17 @@ public class ClientServiceImpl implements ClientService {
         return clientRepository.findByOib(oib)
                 .map(client -> {
                     ClientDTO dto = ClientMapper.clientToDto(client);
-                    restTemplate.postForObject(
-                            "http://localhost:8080/api/v1/card-request",
-                            new ClientDTO(client.getFirstName(), client.getLastName(), client.getOib(), client.getStatus().toString()),
-                            CardStatusMessage.class
-                    );
+                    try {
+                        restTemplate.postForObject(
+                                "http://localhost:8080/api/v1/card-request",
+                                new ClientDTO(client.getFirstName(), client.getLastName(), client.getOib(), client.getStatus().toString()),
+                                CardStatusMessage.class
+                        );
+                    } catch (HttpServerErrorException.InternalServerError e) {
+                        log.warn("Card may already exist for client with OIB {} (received 500 from card service)", client.getOib());
+                    } catch (Exception e) {
+                        log.error("Unexpected error while requesting card: {}", e.getMessage());
+                    }
                     return dto;
                 })
                 .orElseGet(() -> {
