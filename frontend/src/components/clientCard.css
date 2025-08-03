@@ -1,18 +1,17 @@
-/* Page Container */
+/* Page Container - White Theme */
 .client-card-page {
   min-height: 100vh;
-  background: #f8f9fa; /* Light gray background instead of dark gradient */
+  background: #f8f9fa;
   padding: 0;
 }
 
-/* Update the main body background if needed */
+/* Ensure white background */
 body {
   background-color: #f8f9fa !important;
   margin: 0;
   padding: 0;
 }
 
-/* Make sure the root container has light background */
 #root {
   background-color: #f8f9fa !important;
   min-height: 100vh;
@@ -22,13 +21,15 @@ body {
 .credit-card-container {
   perspective: 1000px;
   margin: 2rem auto;
+  display: flex;
+  justify-content: center;
 }
 
+/* Credit Card Design */
 .credit-card {
   width: 100%;
   max-width: 420px;
   aspect-ratio: 1.586;
-  margin: 0 auto 2rem;
   background: linear-gradient(135deg, #ffd700 0%, #ffa500 50%, #ff8c00 100%);
   border-radius: 16px;
   border: 2px solid #b8860b;
@@ -39,367 +40,282 @@ body {
   overflow: hidden;
   transition: all 0.3s ease;
   cursor: pointer;
+  margin: 0 auto 2rem;
 }
 
-/* Card Background Effects */
-.credit-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: radial-gradient(
-    circle at 20% 80%,
-    rgba(255, 255, 255, 0.3) 0%,
-    transparent 50%
-  );
-  pointer-events: none;
-}
-
-.credit-card::after {
-  content: '';
-  position: absolute;
-  top: -50%;
-  right: -50%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    45deg,
-    transparent 30%,
-    rgba(255, 255, 255, 0.1) 50%,
-    transparent 70%
-  );
-  pointer-events: none;
-  animation: rba-shine 3s ease-in-out infinite;
+.credit-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 40px rgba(255, 215, 0, 0.5), 0 8px 20px rgba(0, 0, 0, 0.3);
 }
 
 /* Card Header */
 .card-header {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 1.5rem;
-  z-index: 2;
+  align-items: center;
+  margin-bottom: 2rem;
   position: relative;
+  z-index: 2;
 }
 
 .bank-name {
-  font-weight: 700;
-  font-size: 1.4rem;
-  color: #1a1a1a;
-  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.5);
-  letter-spacing: 1px;
+  font-size: 1.2rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 2px !important;
+  color: #1a1a1a !important;
 }
 
 .card-icon {
   font-size: 2rem !important;
-  color: #b8860b;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+  color: rgba(26, 26, 26, 0.8) !important;
 }
 
 /* Card Number */
 .card-number-container {
-  margin-bottom: 1.5rem;
-  z-index: 2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 3rem 0;
   position: relative;
+  z-index: 2;
 }
 
 .card-number {
-  font-family: 'Courier New', monospace !important;
-  font-weight: 700 !important;
-  font-size: 1.5rem !important;
+  font-size: 1.6rem !important;
+  font-weight: 600 !important;
   letter-spacing: 4px !important;
   color: #1a1a1a !important;
-  text-shadow: 0 1px 3px rgba(255, 255, 255, 0.5) !important;
-  line-height: 1.2;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
-/* Card Footer */
+/* Card Footer - Bottom positioning */
 .card-footer {
+  position: absolute;
+  bottom: 1.5rem;
+  left: 1.5rem;
+  right: 1.5rem;
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
   z-index: 2;
-  position: relative;
 }
 
-.cardholder-info,
+/* Cardholder Info - Bottom Left */
+.cardholder-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+/* OIB Info - Bottom Right */
 .oib-info {
-  flex: 1;
-}
-
-.card-label {
-  opacity: 0.7;
-  margin-bottom: 0.25rem;
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 1px;
-  color: #8b4513;
-}
-
-.cardholder-name {
-  font-weight: 700 !important;
-  color: #1a1a1a !important;
-  font-size: 0.9rem;
-  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.5);
-}
-
-.oib-number {
-  font-family: 'Courier New', monospace !important;
-  font-weight: 700 !important;
-  color: #1a1a1a !important;
-  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.5);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
   text-align: right;
 }
 
-/* Status Section */
+/* Card Labels */
+.card-label {
+  font-size: 0.6rem !important;
+  font-weight: 400 !important;
+  letter-spacing: 1px !important;
+  opacity: 0.8;
+  margin-bottom: 2px !important;
+  color: rgba(26, 26, 26, 0.7) !important;
+}
+
+/* Cardholder Name */
+.cardholder-name {
+  font-size: 0.9rem !important;
+  font-weight: 600 !important;
+  letter-spacing: 1.5px !important;
+  color: #1a1a1a !important;
+  line-height: 1 !important;
+}
+
+/* OIB Number */
+.oib-number {
+  font-size: 0.85rem !important;
+  font-weight: 500 !important;
+  letter-spacing: 1px !important;
+  color: #1a1a1a !important;
+  line-height: 1 !important;
+}
+
+/* Status Controls Paper */
 .status-controls-paper {
   background: white !important;
-  border-radius: 12px !important;
-  box-shadow: 0 4px 20px rgba(255, 215, 0, 0.15) !important;
-  margin-bottom: 1.5rem !important;
-  border-left: 4px solid #ffd700 !important;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
 }
 
-.status-section-title {
-  color: #b8860b !important;
-  font-weight: 600 !important;
-  margin-bottom: 1rem !important;
-}
-
-.status-chip {
-  font-size: 1rem !important;
-  padding: 0.5rem 1rem !important;
-  font-weight: 600 !important;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.status-change-button {
-  padding: 0.75rem 2rem !important;
-  font-weight: 600 !important;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  border-radius: 8px !important;
-  background: linear-gradient(135deg, #ffd700 0%, #ffa500 100%) !important;
-  color: #1a1a1a !important;
-  border: 2px solid #b8860b !important;
-  box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3) !important;
-  transition: all 0.3s ease !important;
-}
-
-.status-change-button:hover {
-  transform: translateY(-2px);
-  background: linear-gradient(135deg, #ffa500 0%, #ff8c00 100%) !important;
-  box-shadow: 0 6px 20px rgba(255, 215, 0, 0.4) !important;
-}
-
-/* Information Summary */
-.info-summary-paper {
-  background: #fffacd !important;
-  border-radius: 8px !important;
-  border-left: 4px solid #ffd700 !important;
-}
-
-.info-summary-text {
-  font-family: 'SF Pro Display', -apple-system, sans-serif;
-  line-height: 1.6;
-  color: #8b4513;
-}
-
-/* Breadcrumbs Styling */
-.breadcrumbs-container {
-  margin-bottom: 1rem;
-}
-
-.breadcrumb-link {
-  text-decoration: none !important;
-  color: #b8860b !important;
-  font-weight: 500;
-  transition: color 0.2s ease;
-}
-
-.breadcrumb-link:hover {
-  color: #8b4513 !important;
-}
-
-/* Header Section */
+/* Page Header */
 .page-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
   margin-bottom: 2rem;
-}
-
-.back-button {
-  color: #b8860b !important;
-  transition: all 0.2s ease;
-}
-
-.back-button:hover {
-  color: #8b4513 !important;
-  transform: translateX(-2px);
+  padding: 1rem 0;
 }
 
 .page-title {
-  color: #8b4513 !important;
+  font-size: 2rem !important;
   font-weight: 600 !important;
+  color: #1a1a1a !important;
+  margin: 0 !important;
 }
 
-/* Loading States */
+/* Back Button */
+.back-button {
+  background: white !important;
+  border: 1px solid #e0e0e0 !important;
+  color: #1565c0 !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+}
+
+.back-button:hover {
+  background: #f5f5f5 !important;
+  border-color: #1565c0 !important;
+}
+
+/* Card Info Summary */
+.card-info-summary {
+  background: #f8f9fa !important;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-top: 1rem;
+}
+
+/* Loading and Error States */
 .loading-container {
   display: flex;
-  flex-direction: column;
+  justify-content: center;
   align-items: center;
-  margin-top: 3rem;
-  width: 100%;
+  min-height: 200px;
+  background: white;
+  border-radius: 8px;
+  margin: 2rem 0;
 }
 
-.loading-text {
-  margin-top: 1rem !important;
-  color: #8b4513 !important;
-  font-weight: 500;
-}
-
-/* Error States */
 .error-container {
-  margin-top: 3rem;
-  width: 100%;
-  padding: 0 1rem;
-}
-
-.retry-button {
-  margin-top: 1rem !important;
-  border-color: #b8860b !important;
-  color: #b8860b !important;
-}
-
-.retry-button:hover {
-  background-color: #b8860b !important;
-  color: white !important;
-}
-
-/* No Card State */
-.no-card-container {
-  margin-top: 2rem;
+  background: white;
+  border: 1px solid #ffcdd2;
+  border-radius: 8px;
+  padding: 2rem;
   text-align: center;
-  padding: 3rem 1rem;
+  margin: 2rem 0;
 }
 
-.no-card-text {
-  color: #8b4513 !important;
-  font-size: 1.1rem;
-}
-
-/* RBA Shine Animation */
-@keyframes rba-shine {
-  0% {
-    transform: translateX(-100%) translateY(-100%);
-  }
-  100% {
-    transform: translateX(100%) translateY(100%);
-  }
+/* No Card Found */
+.no-card-container {
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 3rem;
+  text-align: center;
+  margin: 2rem 0;
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
   .credit-card {
-    max-width: 90%;
-    margin: 0 auto 1.5rem;
-    padding: 1.25rem;
+    max-width: 350px;
+    padding: 1.2rem;
+  }
+
+  .card-footer {
+    bottom: 1.2rem;
+    left: 1.2rem;
+    right: 1.2rem;
   }
 
   .card-number {
-    font-size: 1.25rem !important;
-    letter-spacing: 2px !important;
-  }
-
-  .bank-name {
-    font-size: 1.2rem;
+    font-size: 1.3rem !important;
+    letter-spacing: 3px !important;
   }
 
   .cardholder-name {
-    font-size: 0.8rem;
+    font-size: 0.8rem !important;
+  }
+
+  .oib-number {
+    font-size: 0.75rem !important;
   }
 
   .page-title {
-    font-size: 1.75rem !important;
+    font-size: 1.5rem !important;
+  }
+
+  .page-header {
+    padding: 0.5rem 0;
   }
 }
 
 @media (max-width: 480px) {
   .credit-card {
+    max-width: 300px;
     padding: 1rem;
+  }
+
+  .card-footer {
+    bottom: 1rem;
+    left: 1rem;
+    right: 1rem;
   }
 
   .card-number {
     font-size: 1.1rem !important;
-    letter-spacing: 1px !important;
+    letter-spacing: 2px !important;
   }
 
-  .card-footer {
-    flex-direction: column;
-    gap: 1rem;
+  .cardholder-name {
+    font-size: 0.7rem !important;
   }
 
-  .oib-info {
-    text-align: left;
+  .oib-number {
+    font-size: 0.65rem !important;
   }
-}
 
-/* Animations */
-@keyframes cardAppear {
-  from {
-    opacity: 0;
-    transform: translateY(20px) rotateX(-10deg);
+  .page-title {
+    font-size: 1.25rem !important;
   }
-  to {
-    opacity: 1;
-    transform: translateY(0) rotateX(0deg);
-  }
-}
-
-.credit-card {
-  animation: cardAppear 0.6s ease-out;
-}
-
-@keyframes statusChange {
-  0% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.05);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-
-.status-chip {
-  animation: statusChange 0.3s ease;
-}
-
-/* Focus States for Accessibility */
-.credit-card:focus,
-.status-change-button:focus,
-.back-button:focus {
-  outline: 2px solid #ffd700;
-  outline-offset: 2px;
 }
 
 /* Print Styles */
 @media print {
   .credit-card {
-    box-shadow: none;
-    border: 2px solid #333;
-    background: white !important;
-    color: black !important;
+    box-shadow: none !important;
+    border: 2px solid #b8860b !important;
   }
 
-  .credit-card * {
-    color: black !important;
+  .back-button,
+  .status-controls-paper {
+    display: none !important;
+  }
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+  .credit-card {
+    border: 3px solid #000 !important;
   }
 
-  .status-change-button,
-  .back-button {
-    display: none;
+  .card-label,
+  .cardholder-name,
+  .oib-number,
+  .bank-name {
+    color: #000 !important;
+  }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .credit-card,
+  .credit-card:hover {
+    transform: none !important;
+    transition: none !important;
   }
 }
