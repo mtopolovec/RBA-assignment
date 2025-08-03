@@ -1,7 +1,7 @@
 import React from 'react';
 import { Chip, Box } from '@mui/material';
 import { type Status as StatusType } from '../types/card';
-import './StatusChip.css';
+import './statusChip.css';
 
 interface StatusChipProps {
   status: StatusType;

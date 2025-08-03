@@ -18,7 +18,7 @@ services:
     ports:
       - '9092:9092'
 
-  app:
+  backend:
     build: ./backend/RBA-assignment
     depends_on:
       - kafka
@@ -30,6 +30,16 @@ services:
       - h2-data:/data
     ports:
       - '8080:8080'
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: frontend
+    depends_on:
+      - backend
+    ports:
+      - '4173:4173'
 
 volumes:
   h2-data:
