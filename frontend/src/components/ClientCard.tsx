@@ -162,7 +162,7 @@ const ClientCard = () => {
             >
               <ArrowBackIcon />
             </IconButton>
-            <Typography variant="h4" component="h1">
+            <Typography variant="h4" component="h1" className="page-title">
               Card for {client?.firstName} {client?.lastName}
             </Typography>
           </Box>

@@ -201,7 +201,7 @@ const Dashboard = () => {
           alignItems="center"
           mb={3}
         >
-          <Typography variant="h4" component="h1">
+          <Typography variant="h4" component="h1" className="page-title">
             Client Dashboard
           </Typography>
           <Button

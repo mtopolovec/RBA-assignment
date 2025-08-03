@@ -75,3 +75,8 @@
     font-size: 14px;
   }
 }
+
+.page-title {
+  color: #1a1a1a !important;
+  font-weight: 600 !important;
+}
