@@ -1,6 +1,5 @@
 package com.RBA_assignment.RBA_assignment.service;
 
-import com.RBA_assignment.RBA_assignment.dto.CardStatusMessage;
 import com.RBA_assignment.RBA_assignment.dto.ClientDTO;
 import com.RBA_assignment.RBA_assignment.mapper.ClientMapper;
 import com.RBA_assignment.RBA_assignment.model.Client;
@@ -11,8 +10,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.FetchNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpServerErrorException;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
@@ -21,7 +18,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ClientServiceImpl implements ClientService {
     private final ClientRepository clientRepository;
-    private final RestTemplate restTemplate;
+    private final CardRequestService cardRequestService;
 
     @Override
     public ClientDTO createClient(ClientDTO clientDTO) {
@@ -36,17 +33,8 @@ public class ClientServiceImpl implements ClientService {
         return clientRepository.findByOib(oib)
                 .map(client -> {
                     ClientDTO dto = ClientMapper.clientToDto(client);
-                    try {
-                        restTemplate.postForObject(
-                                "http://localhost:8080/api/v1/card-request",
-                                new ClientDTO(client.getFirstName(), client.getLastName(), client.getOib(), client.getStatus().toString()),
-                                CardStatusMessage.class
-                        );
-                    } catch (HttpServerErrorException.InternalServerError e) {
-                        log.warn("Card may already exist for client with OIB {} (received 500 from card service)", client.getOib());
-                    } catch (Exception e) {
-                        log.error("Unexpected error while requesting card: {}", e.getMessage());
-                    }
+                    cardRequestService.requestCardForClient(dto);
+                    log.info("Client with OIB {} found and card request initiated", oib);
                     return dto;
                 })
                 .orElseGet(() -> {

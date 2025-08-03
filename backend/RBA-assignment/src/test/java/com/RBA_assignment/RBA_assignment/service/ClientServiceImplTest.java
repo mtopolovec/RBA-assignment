@@ -8,7 +8,6 @@ import com.RBA_assignment.RBA_assignment.repository.ClientRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
-import org.springframework.web.client.RestTemplate;
 
 import static com.RBA_assignment.RBA_assignment.model.Status.APPROVED;
 import static com.RBA_assignment.RBA_assignment.model.Status.PENDING;
@@ -20,15 +19,15 @@ class ClientServiceImplTest {
 
     private ClientRepository clientRepository;
     private ClientServiceImpl clientService;
-    private RestTemplate restTemplate;
+    private CardRequestService cardRequestService;
 
     private final String oib = "85251569017";
 
     @BeforeEach
     void setUp() {
         clientRepository = mock(ClientRepository.class);
-        restTemplate = mock(RestTemplate.class);
-        clientService = new ClientServiceImpl(clientRepository, restTemplate);
+        cardRequestService = mock(CardRequestService.class);
+        clientService = new ClientServiceImpl(clientRepository, cardRequestService);
     }
 
     @Test
