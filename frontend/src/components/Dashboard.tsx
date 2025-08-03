@@ -13,14 +13,18 @@ import {
   Alert,
   Button,
   IconButton,
+  TextField,
+  InputAdornment,
 } from '@mui/material';
 import {
   Add as AddIcon,
   Edit as EditIcon,
   Delete as DeleteIcon,
+  Search as SearchIcon,
+  Clear as ClearIcon,
 } from '@mui/icons-material';
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // Using React Router v6+
+import { useNavigate } from 'react-router-dom';
 
 import {
   type Client,
@@ -37,11 +41,39 @@ import StatusChip from './StatusChip';
 const Dashboard = () => {
   const navigate = useNavigate();
   const [clients, setClients] = useState<Client[]>([]);
+  const [filteredClients, setFilteredClients] = useState<Client[]>([]);
+  const [searchOib, setSearchOib] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [createModalOpen, setCreateModalOpen] = useState<boolean>(false);
   const [updateModalOpen, setUpdateModalOpen] = useState<boolean>(false);
   const [selectedClient, setSelectedClient] = useState<Client | null>(null);
+
+  // Filter clients based on search
+  const filterClients = (searchTerm: string) => {
+    if (!searchTerm.trim()) {
+      setFilteredClients(clients);
+      return;
+    }
+
+    const filtered = clients.filter(
+      (client) => client.oib.includes(searchTerm.replace(/\s/g, '')) // Remove spaces for search
+    );
+    setFilteredClients(filtered);
+  };
+
+  // Handle search input change
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value;
+    setSearchOib(value);
+    filterClients(value);
+  };
+
+  // Clear search
+  const handleClearSearch = () => {
+    setSearchOib('');
+    setFilteredClients(clients);
+  };
 
   const fetchClients = async () => {
     try {
@@ -63,7 +95,9 @@ const Dashboard = () => {
       }
 
       const data: Client[] = await response.json();
-      setClients(sortClientsByLastName(data));
+      const sortedClients = sortClientsByLastName(data);
+      setClients(sortedClients);
+      setFilteredClients(sortedClients); // Initialize filtered clients
     } catch (err: any) {
       console.error('Error fetching clients:', err);
       setError(err.message || 'Failed to fetch clients');
@@ -96,11 +130,13 @@ const Dashboard = () => {
       }
 
       await fetchClients();
+      // Clear search after creating new client
+      handleClearSearch();
       console.log('Client created successfully');
     } catch (err: any) {
       console.error('Error creating client:', err);
       setError(err.message || 'Failed to create client');
-      throw err; // Re-throw to let modal handle the error
+      throw err;
     }
   };
 
@@ -133,7 +169,7 @@ const Dashboard = () => {
     } catch (err: any) {
       console.error('Error updating client:', err);
       setError(err.message || 'Failed to update client');
-      throw err; // Re-throw to let modal handle the error
+      throw err;
     }
   };
 
@@ -156,6 +192,10 @@ const Dashboard = () => {
       }
 
       await fetchClients();
+      // Clear search after deleting if current search has no results
+      if (filteredClients.length === 1 && filteredClients[0].oib === oib) {
+        handleClearSearch();
+      }
       console.log('Client deleted successfully');
     } catch (err: any) {
       console.error('Error deleting client:', err);
@@ -163,7 +203,6 @@ const Dashboard = () => {
     }
   };
 
-  // Navigate to client cards using CARDS_BY_OIB endpoint
   const handleClientClick = (oib: string) => {
     navigate(`/client/${oib}/cards`);
   };
@@ -194,25 +233,74 @@ const Dashboard = () => {
   return (
     <Box sx={{ width: '100%', px: 2 }}>
       <Box mt={5}>
-        {/* Header with Create Button */}
+        {/* Header with Search and Create Button */}
         <Box
           display="flex"
           justifyContent="space-between"
           alignItems="center"
           mb={3}
+          gap={2}
         >
           <Typography variant="h4" component="h1" className="page-title">
             Client Dashboard
           </Typography>
-          <Button
-            variant="contained"
-            startIcon={<AddIcon />}
-            onClick={handleCreateClient}
-            color="primary"
-          >
-            Create Client
-          </Button>
+
+          <Box display="flex" alignItems="center" gap={2}>
+            {/* Search by OIB - Only show if there are clients */}
+            {clients.length > 0 && (
+              <TextField
+                size="small"
+                placeholder="Search by OIB..."
+                value={searchOib}
+                onChange={handleSearchChange}
+                sx={{ minWidth: 200 }}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <SearchIcon color="action" />
+                    </InputAdornment>
+                  ),
+                  endAdornment: searchOib && (
+                    <InputAdornment position="end">
+                      <IconButton
+                        size="small"
+                        onClick={handleClearSearch}
+                        title="Clear search"
+                      >
+                        <ClearIcon />
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+              />
+            )}
+
+            {/* Create Client Button */}
+            <Button
+              variant="contained"
+              startIcon={<AddIcon />}
+              onClick={handleCreateClient}
+              color="primary"
+            >
+              Create Client
+            </Button>
+          </Box>
         </Box>
+
+        {/* Search Results Info */}
+        {searchOib && (
+          <Box mb={2}>
+            <Typography variant="body2" color="text.secondary">
+              {filteredClients.length === 0 ? (
+                <>No clients found matching OIB "{searchOib}"</>
+              ) : (
+                <>
+                  Showing {filteredClients.length} of {clients.length} clients
+                </>
+              )}
+            </Typography>
+          </Box>
+        )}
 
         <TableContainer component={Paper} sx={{ width: '100%' }}>
           <Table sx={{ minWidth: 650 }}>
@@ -227,7 +315,7 @@ const Dashboard = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {clients.map((client, index) => (
+              {filteredClients.map((client, index) => (
                 <TableRow
                   key={client.oib}
                   hover
@@ -237,7 +325,7 @@ const Dashboard = () => {
                       backgroundColor: 'action.hover',
                     },
                   }}
-                  onClick={() => handleClientClick(client.oib)} // Make entire row clickable
+                  onClick={() => handleClientClick(client.oib)}
                 >
                   <TableCell>{index + 1}</TableCell>
                   <TableCell>{client.firstName}</TableCell>
@@ -256,7 +344,7 @@ const Dashboard = () => {
                       display="flex"
                       gap={1}
                       justifyContent="center"
-                      onClick={(e) => e.stopPropagation()} // Prevent row click when clicking actions
+                      onClick={(e) => e.stopPropagation()}
                     >
                       <IconButton
                         color="primary"
@@ -282,11 +370,12 @@ const Dashboard = () => {
           </Table>
         </TableContainer>
 
-        {/* Add helpful text */}
+        {/* Help text */}
         <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
           💡 Click on any client row to view their cards
         </Typography>
 
+        {/* No clients found */}
         {clients.length === 0 && (
           <Box mt={3} textAlign="center">
             <Typography variant="body1" color="textSecondary">
@@ -299,6 +388,22 @@ const Dashboard = () => {
               sx={{ mt: 2 }}
             >
               Create Your First Client
+            </Button>
+          </Box>
+        )}
+
+        {/* No search results */}
+        {filteredClients.length === 0 && clients.length > 0 && searchOib && (
+          <Box mt={3} textAlign="center">
+            <Typography variant="body1" color="textSecondary">
+              No clients found matching your search.
+            </Typography>
+            <Button
+              variant="outlined"
+              onClick={handleClearSearch}
+              sx={{ mt: 2 }}
+            >
+              Clear Search
             </Button>
           </Box>
         )}
