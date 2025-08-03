@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   Box,
-  Container,
   Table,
   TableBody,
   TableCell,
@@ -20,23 +19,22 @@ import {
   Add as AddIcon,
   Edit as EditIcon,
   Delete as DeleteIcon,
-  SwapHoriz as StatusIcon,
 } from '@mui/icons-material';
 import { useEffect, useState } from 'react';
 
 import {
   type Client,
-  type UpdateStatusRequest,
   type CreateClientRequest,
+  type UpdateClientRequest,
 } from '../types/client';
 import { API_CONFIG } from '../constants/api';
 import {
   getStatusColor,
-  getNextStatus,
   sortClientsByLastName,
   formatOIB,
 } from '../utils/clientUtils';
 import CreateClientModal from './CreateClientModal';
+import UpdateClientModal from './UpdateClientModal';
 import './dashboard.css';
 
 const Dashboard = () => {
@@ -44,6 +42,8 @@ const Dashboard = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [createModalOpen, setCreateModalOpen] = useState<boolean>(false);
+  const [updateModalOpen, setUpdateModalOpen] = useState<boolean>(false);
+  const [selectedClient, setSelectedClient] = useState<Client | null>(null);
 
   const fetchClients = async () => {
     try {
@@ -107,8 +107,36 @@ const Dashboard = () => {
   };
 
   const handleUpdateClient = (client: Client) => {
-    // TODO: Implement update client modal/form
-    console.log('Update client:', client);
+    setSelectedClient(client);
+    setUpdateModalOpen(true);
+  };
+
+  const handleUpdateSubmit = async (clientData: UpdateClientRequest) => {
+    if (!selectedClient) return;
+    try {
+      const response = await fetch(
+        `${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.CLIENTS}`,
+        {
+          method: 'PUT',
+          headers: API_CONFIG.HEADERS,
+          body: JSON.stringify(clientData),
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(
+          errorData.description || `Failed to update client: ${response.status}`
+        );
+      }
+
+      await fetchClients();
+      console.log('Client updated successfully');
+    } catch (err: any) {
+      console.error('Error updating client:', err);
+      setError(err.message || 'Failed to update client');
+      throw err; // Re-throw to let modal handle the error
+    }
   };
 
   const handleDeleteClient = async (oib: string) => {
@@ -137,65 +165,31 @@ const Dashboard = () => {
     }
   };
 
-  const handleChangeStatus = async (client: Client) => {
-    try {
-      const newStatus = getNextStatus(client.status);
-
-      const requestBody: UpdateStatusRequest = {
-        oib: client.oib,
-        status: newStatus,
-      };
-
-      const response = await fetch(
-        `${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.CHANGE_STATUS}`,
-        {
-          method: 'POST',
-          headers: API_CONFIG.HEADERS,
-          body: JSON.stringify(requestBody),
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error(`Failed to update status: ${response.status}`);
-      }
-
-      await fetchClients();
-      console.log('Status updated successfully');
-    } catch (err: any) {
-      console.error('Error updating status:', err);
-      setError(err.message || 'Failed to update status');
-    }
-  };
-
   useEffect(() => {
     fetchClients();
   }, []);
 
   if (loading) {
     return (
-      <Container maxWidth="lg">
-        <Box display="flex" justifyContent="center" mt={5}>
-          <CircularProgress />
-        </Box>
-      </Container>
+      <Box display="flex" justifyContent="center" mt={5} sx={{ width: '100%' }}>
+        <CircularProgress />
+      </Box>
     );
   }
 
   if (error) {
     return (
-      <Container maxWidth="lg">
-        <Box mt={5}>
-          <Alert severity="error">{error}</Alert>
-          <Button variant="outlined" onClick={fetchClients} sx={{ mt: 2 }}>
-            Retry
-          </Button>
-        </Box>
-      </Container>
+      <Box mt={5} sx={{ width: '100%', px: 2 }}>
+        <Alert severity="error">{error}</Alert>
+        <Button variant="outlined" onClick={fetchClients} sx={{ mt: 2 }}>
+          Retry
+        </Button>
+      </Box>
     );
   }
 
   return (
-    <Container maxWidth="lg">
+    <Box sx={{ width: '100%', px: 2 }}>
       <Box mt={5}>
         {/* Header with Create Button */}
         <Box
@@ -217,15 +211,15 @@ const Dashboard = () => {
           </Button>
         </Box>
 
-        <TableContainer component={Paper}>
-          <Table>
+        <TableContainer component={Paper} sx={{ width: '100%' }}>
+          <Table sx={{ minWidth: 650 }}>
             <TableHead>
               <TableRow>
                 <TableCell>#</TableCell>
                 <TableCell>First Name</TableCell>
                 <TableCell>Last Name</TableCell>
                 <TableCell>OIB</TableCell>
-                <TableCell>Status</TableCell>
+                <TableCell>Card Status</TableCell>
                 <TableCell align="center">Actions</TableCell>
               </TableRow>
             </TableHead>
@@ -252,14 +246,6 @@ const Dashboard = () => {
                         title="Edit Client"
                       >
                         <EditIcon />
-                      </IconButton>
-                      <IconButton
-                        color="secondary"
-                        size="small"
-                        onClick={() => handleChangeStatus(client)}
-                        title="Change Status"
-                      >
-                        <StatusIcon />
                       </IconButton>
                       <IconButton
                         color="error"
@@ -299,8 +285,19 @@ const Dashboard = () => {
           onClose={() => setCreateModalOpen(false)}
           onSubmit={handleCreateSubmit}
         />
+
+        {/* Update Client Modal */}
+        <UpdateClientModal
+          open={updateModalOpen}
+          client={selectedClient}
+          onClose={() => {
+            setUpdateModalOpen(false);
+            setSelectedClient(null);
+          }}
+          onSubmit={handleUpdateSubmit}
+        />
       </Box>
-    </Container>
+    </Box>
   );
 };
 
